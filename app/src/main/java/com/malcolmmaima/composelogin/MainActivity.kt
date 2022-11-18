@@ -62,7 +62,7 @@ fun LoginScreen() {
 
     Column (
         modifier = Modifier
-            .background(color = Color.LightGray)
+            .background(color = Color.Unspecified)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
