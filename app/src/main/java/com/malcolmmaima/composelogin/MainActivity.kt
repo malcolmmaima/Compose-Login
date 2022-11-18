@@ -143,7 +143,7 @@ fun LoginScreen() {
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onNext = { focusManager.clearFocus() }
+                        onDone = { focusManager.clearFocus() }
                     ),
                     isError = !isPasswordValid,
                     trailingIcon = {
