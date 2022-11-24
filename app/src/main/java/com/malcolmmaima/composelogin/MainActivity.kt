@@ -1,6 +1,7 @@
 package com.malcolmmaima.composelogin
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Patterns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,21 +31,27 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.malcolmmaima.composelogin.ui.theme.ComposeLoginTheme
 
 class MainActivity : ComponentActivity() {
+    private val auth by lazy {
+        Firebase.auth
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeLoginTheme {
-                LoginScreen()
+                LoginScreen(auth)
             }
         }
     }
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(auth: FirebaseAuth) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -158,7 +165,16 @@ fun LoginScreen() {
                 )
 
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = {
+                              auth.signInWithEmailAndPassword(email, password)
+                                  .addOnCompleteListener {
+                                      if(it.isSuccessful){
+                                          Log.d("LoginScreen", "The user has successfully logged in")
+                                      } else {
+                                          Log.w("LoginScreen", "The user has failed to login", it.exception)
+                                      }
+                                  }
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = isEmailValid && isPasswordValid,
                     colors = ButtonDefaults.buttonColors(
@@ -219,6 +235,6 @@ fun LoginScreen() {
 @Composable
 fun DefaultPreview() {
     ComposeLoginTheme {
-        LoginScreen()
+        LoginScreen(Firebase.auth)
     }
 }
